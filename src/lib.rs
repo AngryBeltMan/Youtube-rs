@@ -1,7 +1,7 @@
 use cpython::*;
 use std::{fs::File, io::Read, path::Path};
-use crate::data_structs::Options;
-mod data_structs;
+pub use crate::data_structs::Options;
+pub mod data_structs;
 
 pub struct YTClient {
     gil:GILGuard,
