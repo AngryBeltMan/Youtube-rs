@@ -1,10 +1,10 @@
-#Youtube-rs
+Youtube-rs
 Youtube-rs is a simple easy to use youtube api library make for the programming language rust.
 The library is still a work and progress so expect new features to be out or unexpected errors.
 The library uses python binding to call the youtube api. This library currently supports uploading
 videos, editing thumbnails, and rating videos.
 
-#Example
+Example
 Here is how to upload a video using this library.
 ```
 use youtube_rs::*;
