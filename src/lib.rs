@@ -1,12 +1,54 @@
 use cpython::*;
-pub use data_structs::VideoData;
-pub use std::{fs::File, io::Read, path::Path};
-pub use crate::data_structs::*;
-pub mod data_structs;
+use crate::thumbnail::ThumbnailArgs;
+use crate::liking::LikingArgs;
+pub use crate::video::*;
+use std::{fs::File, io::Read, path::Path};
+/// Video Rating
+/// ```
+/// use youtube_rs::liking::*;
+/// use youtube_rs::YTClient;
+///
+/// fn main() {
+///     let client = YTClient::from_secret_path("src/secret.json").unwrap();
+///     let rating = LikingArgs {
+///         // ID of the video you are going to like
+///         id:"sg4TxfwSeYs",
+///         // Type of rating you are going to give
+///         rating:VideoInteration::Like
+///     };
+///     client.rate_video_request(rating).unwrap();
+/// }
+/// ```
 pub mod liking;
+/// Thumbnail Editing
+pub mod thumbnail;
+/// Video Uploading
+/// ```
+/// // Put your own youtube secret file here
+/// let client = YTClient::from_secret_path("./secret.json").unwrap();
+/// let options = VideoData {
+///     title: "test video",
+///     desc: "cool description",
+///     keywords: Some("test,cool"),
+///     category:video::CategoryID::SciTech as u32,
+///     privacy_status: video::PrivacyStatus::Private,
+///     file: "./test.mp4",
+///     for_kids:false
+/// };
+/// Creates the settings for the video
+/// let opt = client.create_upload_options(options).unwrap();
+/// client.upload_request(opt).expect("Could not upload");
+/// ```
+pub mod video;
+
 static PYLIB:&str = include_str!("../pythonlib/lib.py");
 
 /// The client that is used to interface with the google youtube api.
+/// ```
+/// /* When inputing the secret make sure it is the oauth2 token and make sure it is a desktop
+/// application type */
+/// YTClient::new_from_path("./secret.json")
+/// ```
 pub struct YTClient {
     gil:GILGuard,
     module:PyObject,
@@ -90,6 +132,7 @@ impl YTClient {
         self.module.call_method(py, "upload_req", (self.client.clone_ref(py),opt.options), None)?;
         Ok::<(),PyErr>(())
     }
+    /// Sends a request to change the thumbnail of one of your videos.
     pub fn set_thumbnail(&self,args:ThumbnailArgs) -> Result<(),impl std::fmt::Debug>{
         let py = self.gil.python();
         self.module.call_method(py, "set_thumbnail", (args.id,args.file), None)?;
@@ -105,15 +148,11 @@ fn test_client() {
         title: "cool",
         desc: "cool video",
         keywords: Some("cool,video"),
-        category:data_structs::CategoryID::SciTech as u32,
-        privacy_status:data_structs::PrivacyStatus::Private,
+        category:video::CategoryID::SciTech as u32,
+        privacy_status:video::PrivacyStatus::Private,
         file:"src/funny.mp4",
         for_kids:false
     };
     let opt = client.create_upload_options(video_data).unwrap();
     client.upload_request(opt).unwrap();
 }
-// #[test]
-// fn new_test_client() {
-//     YTClient::new_from_secret("hello");
-// }

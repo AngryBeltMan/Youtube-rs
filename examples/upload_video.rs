@@ -1,4 +1,4 @@
-use youtube_rs::{*, data_structs::VideoData};
+use youtube_rs::*;
 fn main() {
     // Put your own youtube secret file here
     let client = YTClient::from_secret_path("./secret.json").unwrap();
@@ -6,8 +6,8 @@ fn main() {
         title: "test video",
         desc: "cool description",
         keywords: Some("test,cool"),
-        category:data_structs::CategoryID::SciTech as u32,
-        privacy_status: data_structs::PrivacyStatus::Private,
+        category:video::CategoryID::SciTech as u32,
+        privacy_status: video::PrivacyStatus::Private,
         file: "./test.mp4",
         for_kids:false
     };

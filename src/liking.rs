@@ -1,7 +1,7 @@
 pub enum VideoInteration {
     Like,
     Dislike,
-    Neither
+    Neither,
 }
 impl VideoInteration {
     pub fn to_str(&self) -> &str {
@@ -13,6 +13,6 @@ impl VideoInteration {
     }
 }
 pub struct LikingArgs<'a> {
-    pub id:&'a str,
-    pub rating:VideoInteration
+    pub id: &'a str,
+    pub rating: VideoInteration,
 }

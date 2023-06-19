@@ -2,6 +2,8 @@
 name = "youtube-rs"
 version = "0.1.0"
 edition = "2021"
+description = "A simple easy to use library for using the youtube api."
+license = "MIT"
 
 [dependencies]
 cpython = "0.7.1"

@@ -1,8 +1,5 @@
-#[path ="options.rs"]
-mod options;
-pub use crate::data_structs::options::*;
-pub use crate::liking::*;
-
+use cpython::PyObject;
+/// The privacy status for a youtube video.
 #[derive(Debug,Clone)]
 pub enum PrivacyStatus {
     Public,
@@ -11,6 +8,12 @@ pub enum PrivacyStatus {
 }
 
 impl PrivacyStatus {
+    /// Returns a str matching the PrivacyStatus enum's arm.
+    /// #Example
+    /// ```rust
+    /// let privacy_status = PrivacyStatus::Public;
+    /// assert_eq!(privacy_status.to_str(),"public")
+    /// ```
     pub fn to_str(&self) -> &str{
         match self {
             PrivacyStatus::Private => "private",
@@ -19,6 +22,7 @@ impl PrivacyStatus {
         }
     }
 }
+/// Contains information about the video being uploaded.
 #[derive(Debug,Clone)]
 pub struct VideoData<'a,'b,'c,'d> {
     pub title:&'a str,
@@ -31,14 +35,9 @@ pub struct VideoData<'a,'b,'c,'d> {
 
 }
 
-#[derive(Debug,Clone)]
-pub struct ThumbnailArgs<'a,'b> {
-    pub id:&'a str,
-    pub file:&'b str,
-}
-
 #[repr(u32)]
-/// A couple Youtube CategoryIDs. To see more CategoryIDs visit (https://mixedanalytics.com/blog/list-of-youtube-video-category-ids/).
+#[derive(Clone,Debug)]
+/// A couple Youtube CategoryIDs. To see more CategoryIDs visit <https://mixedanalytics.com/blog/list-of-youtube-video-category-ids/>.
 pub enum CategoryID {
     FilmAnimation = 1,
     AutosVehicles = 2,
@@ -60,4 +59,8 @@ pub enum CategoryID {
     ActionAdventure = 32,
     Documentary = 35,
     Shorts = 42
+}
+/// Setting for the video being uploaded.In order to be created a YTClient must be created first.
+pub struct UploadOptions {
+    pub options:PyObject
 }
