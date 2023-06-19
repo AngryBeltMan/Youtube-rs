@@ -1,20 +1,29 @@
-use cpython::PyObject;
+#[path ="options.rs"]
+mod options;
+pub use crate::data_structs::options::UploadOptions;
 
-/// Setting for the video being uploaded.In order to be created a YTClient must be created first.
-pub struct Options {
-    pub options:PyObject
-}
 pub enum PrivacyStatus {
     Public,
     Private,
     Unlisted
 }
+//&self,title:&str,desc:&str,keywords:Option<&str>,category:u32,privacy_status:data_structs::PrivacyStatus,file:&str,for_kids:bool
+pub struct VideoData<'a,'b,'c,'d> {
+    pub title:&'a str,
+    pub desc:&'b str,
+    pub keywords:Option<&'c str>,
+    pub category:u32,
+    pub privacy_status:PrivacyStatus,
+    pub file:&'d str,
+    pub for_kids:bool
+}
+
 impl PrivacyStatus {
     pub fn to_str(&self) -> &str{
         match self {
-            PrivacyStatus::Private => return "private",
-            PrivacyStatus::Public => return "public",
-            PrivacyStatus::Unlisted => return "unlisted"
+            PrivacyStatus::Private => "private",
+            PrivacyStatus::Public => "public",
+            PrivacyStatus::Unlisted => "unlisted"
         }
     }
 }

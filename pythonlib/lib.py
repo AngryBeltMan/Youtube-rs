@@ -43,6 +43,9 @@ def client_from_str(data):
     print("client success")
     return build(YOUTUBE,VERSION,credentials=cred)
 
+def search_req(yt):
+    search.search_request(yt)
+
 def upload_req(yt,options:Options):
     body = dict(
         snippet=dict(
@@ -87,7 +90,7 @@ def upload_video(request):
 
 def main():
     yt = client_secret_path("./secret.json");
-    upload_req(yt,Options("bruhh #shorts","#shorts","","22","public","test.mp4"))
+    search_req(yt)
 
 if __name__ == "__main__":
     main()
