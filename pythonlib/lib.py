@@ -1,5 +1,4 @@
 import os
-import unittest
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 import json
@@ -19,8 +18,11 @@ class Options:
         self.privacy_status = privacy_status
         self.file = file
         self.for_kids = for_kids
-    def new_file(self,file:str):
-        self.file = file
+
+class InteractionArgs:
+    def __init__(self,id:str,option:str):
+        self.id = id
+        self.option = option
 
 def client_secret_path(path):
     with open(path,"r") as f:
@@ -31,6 +33,11 @@ def client_secret_env_var(env_name):
     if data is not None:
         return client_from_str(data)
     return None
+def set_thumbnail(yt,id:str,file:str):
+    yt.thumbnails().set(
+        videoId=id,
+        media_body=file
+    ).execute()
 
 def client_from_str(data):
     data = json.loads(data)
@@ -42,9 +49,6 @@ def client_from_str(data):
         pass
     print("client success")
     return build(YOUTUBE,VERSION,credentials=cred)
-
-def search_req(yt):
-    search.search_request(yt)
 
 def upload_req(yt,options:Options):
     body = dict(
@@ -66,9 +70,12 @@ def upload_req(yt,options:Options):
     )
     upload_video(req)
 
-class UnitTests(unittest.TestCase):
-    def test_api(self):
-        pass
+def interact_with_video(yt,args:InteractionArgs):
+    yt.videos().rate(
+        id=args.id,
+        rating=args.option
+    ).execute()
+
 # True means it was sucessful and None means it wasn't
 def upload_video(request):
     res= None;
@@ -89,9 +96,7 @@ def upload_video(request):
     return None
 
 def main():
-    yt = client_secret_path("./secret.json");
-    search_req(yt)
-
+    pass
 if __name__ == "__main__":
     main()
 

@@ -1,21 +1,13 @@
 #[path ="options.rs"]
 mod options;
-pub use crate::data_structs::options::UploadOptions;
+pub use crate::data_structs::options::*;
+pub use crate::liking::*;
 
+#[derive(Debug,Clone)]
 pub enum PrivacyStatus {
     Public,
     Private,
     Unlisted
-}
-//&self,title:&str,desc:&str,keywords:Option<&str>,category:u32,privacy_status:data_structs::PrivacyStatus,file:&str,for_kids:bool
-pub struct VideoData<'a,'b,'c,'d> {
-    pub title:&'a str,
-    pub desc:&'b str,
-    pub keywords:Option<&'c str>,
-    pub category:u32,
-    pub privacy_status:PrivacyStatus,
-    pub file:&'d str,
-    pub for_kids:bool
 }
 
 impl PrivacyStatus {
@@ -27,6 +19,24 @@ impl PrivacyStatus {
         }
     }
 }
+#[derive(Debug,Clone)]
+pub struct VideoData<'a,'b,'c,'d> {
+    pub title:&'a str,
+    pub desc:&'b str,
+    pub keywords:Option<&'c str>,
+    pub category:u32,
+    pub privacy_status:PrivacyStatus,
+    pub file:&'d str,
+    pub for_kids:bool
+
+}
+
+#[derive(Debug,Clone)]
+pub struct ThumbnailArgs<'a,'b> {
+    pub id:&'a str,
+    pub file:&'b str,
+}
+
 #[repr(u32)]
 /// A couple Youtube CategoryIDs. To see more CategoryIDs visit (https://mixedanalytics.com/blog/list-of-youtube-video-category-ids/).
 pub enum CategoryID {

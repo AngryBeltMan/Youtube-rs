@@ -12,6 +12,6 @@ fn main() {
         for_kids:false
     };
     // Creates the settings for the video
-    let opt = client.create_options(options).unwrap();
+    let opt = client.create_upload_options(options).unwrap();
     client.upload_request(opt).expect("Could not upload");
 }

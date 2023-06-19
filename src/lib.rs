@@ -1,11 +1,12 @@
 use cpython::*;
-use data_structs::VideoData;
-use std::{fs::File, io::{Read,Write}, path::Path};
-pub use crate::data_structs::UploadOptions;
+pub use data_structs::VideoData;
+pub use std::{fs::File, io::Read, path::Path};
+pub use crate::data_structs::*;
 pub mod data_structs;
+pub mod liking;
 static PYLIB:&str = include_str!("../pythonlib/lib.py");
-static PYSEARCH:&str = include_str!("../pythonlib/search.py");
 
+/// The client that is used to interface with the google youtube api.
 pub struct YTClient {
     gil:GILGuard,
     module:PyObject,
@@ -13,6 +14,9 @@ pub struct YTClient {
 }
 /// The YTClient is required for calling and using the youtube api in this library.
 impl YTClient {
+    /// Creates the client using thhe google youtube api secret json file. You can get the secret
+    /// json file from the google developers page. If you want to create the client using the path
+    /// the secret json file use the from_path(...) method instead.
     pub fn new_from_secret(data:&str) -> Self {
         let gil = Python::acquire_gil();
         let py = gil.python();
@@ -26,9 +30,8 @@ impl YTClient {
         let client = module.call_method(py, "client_from_str", (data,), None).unwrap();
         Self { gil, module, client }
     }
-    /// Creates the client using thhe google youtube api secret json file. You can get the secret
-    /// json file from the google developers page. If you want to create the client using the path
-    /// the secret json file use the from_path(...) method instead.
+    /// DEPRICATED. This method is deprecated because it required the lib files to be present in
+    /// user rust program. Call new_from_secret(...) to create a new youtube client from a str.
     #[deprecated]
     pub fn from_secret(data:&str) -> Self {
         let gil = Python::acquire_gil();
@@ -59,8 +62,9 @@ impl YTClient {
         let client = Self::new_from_secret(&buf);
         Ok(client)
     }
-    // self,title:str,desc:str,keywords:str,category:str,privacy_status:str,file:str,for_kids=False
-    pub fn create_options(&self,video_data:VideoData) -> Result<UploadOptions,String> {
+    /// Returns a struct that can be used to upload a video. Will return an error is the file given
+    /// doesn't exist.
+    pub fn create_upload_options(&self,video_data:VideoData) -> Result<UploadOptions,String> {
         let py = self.gil.python();
         if !Path::new(video_data.file).exists() { return Err(String::from("File does not exist")) }
         let opt = self.module.call_method( py, "Options", (
@@ -74,9 +78,21 @@ impl YTClient {
              ), None).unwrap();
         Ok(UploadOptions { options: opt })
     }
+    pub fn rate_video_request(&self,rating_data:LikingArgs) -> Result<(),impl std::fmt::Debug> {
+        let py = self.gil.python();
+        let interaction = self.module.call_method(py, "InteractionArgs", (rating_data.id,rating_data.rating.to_str()), None)?;
+        self.module.call_method(py, "interact_with_video", (self.client.clone_ref(py),interaction), None)?;
+        Ok::<(),PyErr>(())
+    }
+    /// Sends a request to upload a new video.
     pub fn upload_request(&self,opt:UploadOptions) -> Result<(),impl std::fmt::Debug> {
         let py = self.gil.python();
         self.module.call_method(py, "upload_req", (self.client.clone_ref(py),opt.options), None)?;
+        Ok::<(),PyErr>(())
+    }
+    pub fn set_thumbnail(&self,args:ThumbnailArgs) -> Result<(),impl std::fmt::Debug>{
+        let py = self.gil.python();
+        self.module.call_method(py, "set_thumbnail", (args.id,args.file), None)?;
         Ok::<(),PyErr>(())
     }
 }
@@ -94,7 +110,7 @@ fn test_client() {
         file:"src/funny.mp4",
         for_kids:false
     };
-    let opt = client.create_options(video_data).unwrap();
+    let opt = client.create_upload_options(video_data).unwrap();
     client.upload_request(opt).unwrap();
 }
 // #[test]

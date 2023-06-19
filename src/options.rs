@@ -3,3 +3,7 @@ use cpython::PyObject;
 pub struct UploadOptions {
     pub options:PyObject
 }
+/// Options for interating with a video (ie liking and disliking).
+pub struct InterationOptions {
+    pub options:PyObject
+}
