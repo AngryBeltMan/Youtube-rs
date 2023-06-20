@@ -5,5 +5,11 @@ edition = "2021"
 description = "A simple easy to use library for using the youtube api."
 license = "MIT"
 
+[profile.dev]
+opt-level = 0
+
+[profile.release]
+opt-level = 3
+
 [dependencies]
 cpython = "0.7.1"
