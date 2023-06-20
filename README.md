@@ -2,8 +2,17 @@ Youtube-rs is a simple easy to use youtube api library make for the programming 
 The library is still a work and progress so expect new features to be out or unexpected errors.
 The library uses python binding to call the youtube api. This library currently supports uploading
 videos, editing thumbnails, and rating videos.
+# Getting Started
+First install pip if you havent already. Next install all of the required modules with pip3 by pasting the following command into a terminal.
+'''
+pip3 install google-api-python-client==1.7.2 && 
+pip3 install google-auth==1.8.0 &&
+pip3 install google-auth-httplib2==0.0.3 &&
+pip3 install google-auth-oauthlib==0.4.1
+'''
 
-Example
+
+# Example
 Here is how to upload a video using this library.
 ```
 use youtube_rs::*;
