@@ -1,11 +1,12 @@
 [package]
 name = "youtube-rs"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2021"
 description = "A simple easy to use library for using the youtube api."
 license = "MIT"
 keywords = ["youtube", "python", "google"]
 exclude = [".env"]
+repository = "https://github.com/AngryBeltMan/Youtube-rs"
 
 [profile.dev]
 opt-level = 0
