@@ -1,3 +1,4 @@
+#![warn(clippy::all)]
 use cpython::*;
 use crate::thumbnail::ThumbnailArgs;
 use crate::liking::LikingArgs;
