@@ -12,7 +12,8 @@ pip3 install google-auth==1.8.0 &&
 pip3 install google-auth-httplib2==0.0.3 &&
 pip3 install google-auth-oauthlib==0.4.1
 ```
-
+# Tutorial
+Watch this simple video to find out how to upload a video https://www.youtube.com/watch?v=ABWl6vFP2uU
 
 # Example
 Here is how to upload a video using this library.
