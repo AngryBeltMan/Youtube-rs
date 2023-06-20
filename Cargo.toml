@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 description = "A simple easy to use library for using the youtube api."
 license = "MIT"
+exclude = [".env"]
 
 [profile.dev]
 opt-level = 0
